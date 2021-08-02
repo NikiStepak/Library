@@ -1,0 +1,97 @@
+body {
+    background-attachment: fixed;
+    background-color: white;
+    background-image: url("../image/book_main.jpg");
+    background-size: cover;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    text-transform: capitalize;
+}
+
+header {
+    color: #c13334;
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 5px 5px 5px #dbac78;
+}
+
+nav.main { 
+    background-color: #c13334;
+    font-size: 20px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+nav.sign { 
+    background-color: #c13334;
+    float: right;
+    font-size: 16px;
+    text-align: center;
+}
+
+ol {
+    display: inline-block;
+    height: 35px;
+    line-height: 200%;    
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+ol > li {
+    border-right: 1px dashed white;	
+    float: left;
+    font-weight: bold;
+    height: 40px;
+    width: 150px;    
+}
+
+ol > li:first-child {
+    border-left: 1px dashed white;
+}
+
+ol > li:hover {
+    background-color: #dbac78;
+}
+
+ol > li:hover > a {
+    color: #c13334;
+}
+
+ol > li > ul {
+    display: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ol > li:hover > ul {
+    display: block;
+    font-size: 16px; 
+}
+
+ol > li > ul > li {
+    background-color: #dbac78;
+    border-top: 1px dashed white;
+}
+
+ol > li > ul > li:hover {
+    background-color: #c13334;
+}
+
+#container_main {
+    background-color: white;
+    box-shadow: 3px 3px 30px 5px black;
+    margin: auto;
+    margin-top: 100px;
+    opacity: 0.93;
+    padding: 20px;
+    width: 60%;
+}
