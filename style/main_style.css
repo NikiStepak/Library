@@ -1,60 +1,92 @@
 body {
     background-attachment: fixed;
-    background-color: white;
     background-image: url("../image/book_main.jpg");
     background-size: cover;
     font-family: 'Lato', sans-serif;
     font-size: 15px;
-    text-transform: capitalize;
+    margin: 0;
 }
 
 header {
-    color: #c13334;
-    font-size: 70px;
-    font-weight: bold;
-    text-align: center;
-    text-shadow: 5px 5px 5px #dbac78;
+    text-shadow: 5px 5px 5px #dbac78;    
 }
 
-nav.main { 
+nav {
     background-color: #c13334;
-    font-size: 20px;
-    padding: 10px;
+    font-weight: bold;
     text-align: center;
+}
+
+nav.main {
+    font-size: 20px;
+    padding: 5px;
     width: 100%;
 }
 
-nav.sign { 
-    background-color: #c13334;
+nav.sign {
     float: right;
-    font-size: 16px;
-    text-align: center;
 }
 
-ol {
+a {
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+a.white {
+    color: #ffffff;
+}
+
+a.black {
+    color: #000000;
+}
+
+a.color {
+    color: #c13334;
+}
+
+a.color:hover {
+    text-shadow: 5px 5px 5px #dbac78;    
+}
+
+a.black:hover {
+    color: #c13334;
+}
+
+nav.main > ol {
     display: inline-block;
     height: 35px;
-    line-height: 200%;    
+    line-height: 200%;
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-a{
-    color: white;
-    text-decoration: none;
+nav.sign > ol {
+    display: inline-block;
+    height: 27px;
+    line-height: 200%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-ol > li {
-    border-right: 1px dashed white;	
+nav.main > ol > li {
+    border-right: 1px dashed #ffffff;
     float: left;
-    font-weight: bold;
     height: 40px;
+    text-align: center;
     width: 150px;    
 }
 
+nav.sign > ol > li {
+    border-right: 1px dashed #ffffff;
+    float: left;
+    height: 30px;
+    width: 100px;
+}
+
 ol > li:first-child {
-    border-left: 1px dashed white;
+    border-left: 1px dashed #ffffff;
 }
 
 ol > li:hover {
@@ -74,12 +106,14 @@ ol > li > ul {
 
 ol > li:hover > ul {
     display: block;
-    font-size: 16px; 
+    font-size: 15px;
 }
 
 ol > li > ul > li {
     background-color: #dbac78;
-    border-top: 1px dashed white;
+    border-top: 1px dashed #ffffff;
+    position: relative;
+    z-index: 100;
 }
 
 ol > li > ul > li:hover {
@@ -87,11 +121,10 @@ ol > li > ul > li:hover {
 }
 
 #container_main {
-    background-color: white;
-    box-shadow: 3px 3px 30px 5px black;
+    background-color: #ffffff;
+    box-shadow: 3px 3px 30px 5px #000000;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 50px;    
     opacity: 0.93;
-    padding: 20px;
     width: 60%;
 }

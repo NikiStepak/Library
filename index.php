@@ -40,57 +40,63 @@ if(isset($_SESSION['e_bot'])){
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Library - Main Page</title>
-        <link rel="stylesheet" href="style/main_style.css" type="text/css">
-        <!-- <script> - JavaScript -->
         <meta charset="UTF-8">
         <meta name="author" content="Niki"><!-- Author of a page -->
         <!--<meta http-equiv="refresh" content="30"> Refresh document every 30s -->       
         <meta name="viewport" content="width-device-width, initial-scale=1.0"><!-- setting the viewport to make website look good on all devices -->                
+        <title>Library - Main Page</title>
+        <link rel="stylesheet" href="style/main_style.css" type="text/css">
+        <link rel="stylesheet" href="style/text_style.css" type="text/css">
+        <!-- <script> - JavaScript -->
     </head>
     <body>
         <nav class="sign">
             <ol>
                 <?php
                 if((isset($_SESSION['logged'])) && ($_SESSION['logged']==true)){
-                    echo'<li><a href="#">'.$_SESSION['name'].'</a>';
+                    echo'<li><a href="#" class="white">'.$_SESSION['name'].'</a>';
                     echo '<ul>';
-                    echo '<li><a href="sign_nav/account.php">my account</a></li>' ;
-                    echo '<li><a href="sign_nav/signOut.php">Sign Out</a></li>' ;
+                    echo '<li><a href="sign_nav/account.php" class="white">my account</a></li>' ;
+                    echo '<li><a href="sign_nav/signOut.php" class="white" class="white">Sign Out</a></li>' ;
                     echo '</ul></li>';
                 }
                 elseif ((isset($_SESSION['librarian'])) && ($_SESSION['librarian']==true)) {
-                    echo'<li><a href="#">'.$_SESSION['name'].'</a>';
+                    echo'<li><a href="#" class="white">'.$_SESSION['name'].'</a>';
                     echo '<ul>';
-                    echo '<li><a href="sign_nav/signOut.php">Sign Out</a></li>' ;
+                    echo '<li><a href="sign_nav/signOut.php" class="white">Sign Out</a></li>' ;
                     echo '</ul></li>';
                 }
                 else {
-                    echo '<li><a href="sign_nav/signUp.php">Sign up</a></li>';
-                    echo '<li><a href="sign_nav/signIn.php">Sign in</a></li>';                      
+                    echo '<li><a href="sign_nav/signUp.php" class="white">Sign up</a></li>';
+                    echo '<li><a href="sign_nav/signIn.php" class="white">Sign in</a></li>';                      
                 }
                 ?>
             </ol>
         </nav>
         
         <header>
-            <img src="image/logo.png" alt="Logo">LIBRARY     
+            <h1><img src="image/logo.png" alt="Logo">LIBRARY</h1>     
         </header>
         
         <nav class="main">
             <ol>
-                <li><a href="main_nav/books.php">books</a></li>
-                <li><a href="main_nav/authors.php">authors</a></li>
+                <li><a href="#" class="white">Home</a>
+                <li><a href="#" class="white">catalog</a>
+                    <ul>
+                        <li><a href="main_nav/books.php" class="white">books</a></li>
+                        <li><a href="main_nav/authors.php" class="white">authors</a></li>
+                    </ul>
+                </li>
                 <?php
                 if((isset($_SESSION['librarian'])) && ($_SESSION['librarian']==true)){
-                    echo '<li><a href="#">librarian</a>';
+                    echo '<li><a href="#" class="white">librarian</a>';
                     echo '<ul>';
-                    echo '<li><a href="main_nav/signLibrarian.php">Add librarian</a></li>' ;
-                    echo '<li><a href="main_nav/addBook.php">Add book</a></li>' ;
+                    echo '<li><a href="main_nav/signLibrarian.php" class="white">Add librarian</a></li>' ;
+                    echo '<li><a href="main_nav/addBook.php" class="white">Add book</a></li>' ;
                     echo '</ul></li>';
                 }
                 ?>
-                <li><a href="#">contact</a></li>
+                <li><a href="main_nav/contact.php" class="white">contact</a></li>
             </ol>
         </nav>
         
