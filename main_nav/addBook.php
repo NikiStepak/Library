@@ -1,142 +1,37 @@
 <?php
 session_start();
 
-if((!(isset($_SESSION['librarian']))) && (!($_SESSION['librarian']==true))){
+/*if((!(isset($_SESSION['librarian']))) && (!($_SESSION['librarian']==true))){
     header('Location: ../index.php');
     exit();
-}
+          echo '<script>alert("a")</script>';
+}*/
 
-if(filter_has_var(INPUT_POST, 'addPublisher')){
+if(filter_has_var(INPUT_POST, 'addBook')){
     
-    require_once '../connect.php';
-    mysqli_report(MYSQLI_REPORT_STRICT);
-    
-    try{
-        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-        if(mysqli_connect_errno()){
-            throw new Exception(mysqli_connect_errno());
-        }
-        else {     
-            $publisher = filter_input(INPUT_POST, 'new_publisher', FILTER_SANITIZE_STRING);
-    
-            $sql = "INSERT INTO publishers VALUES(NULL,'$publisher')"; 
-            if(!mysqli_query($link, $sql)){
-                throw new Exception(mysqli_error($link));
-            }
-                        
-            mysqli_close($link);
-        }
-    } catch (Exception $e){
-        echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
-        echo '<br>Developer information: '.$e;
-    }
-}
-
-if(filter_has_var(INPUT_POST, 'addLanguage')){
-    
-    require_once '../connect.php';
-    mysqli_report(MYSQLI_REPORT_STRICT);
-    
-    try{
-        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-        if(mysqli_connect_errno()){
-            throw new Exception(mysqli_connect_errno());
-        }
-        else {     
-            $language = filter_input(INPUT_POST, 'new_language', FILTER_SANITIZE_STRING);
-    
-            $sql = "INSERT INTO nationalities_languages VALUES(NULL,'$language')"; 
-            if(!mysqli_query($link, $sql)){
-                throw new Exception(mysqli_error($link));
-            }
-                        
-            mysqli_close($link);
-        }
-    } catch (Exception $e){
-        echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
-        echo '<br>Developer information: '.$e;
-    }
-}
-
-if(filter_has_var(INPUT_POST, 'addGenre')){
-    
-    require_once '../connect.php';
-    mysqli_report(MYSQLI_REPORT_STRICT);
-    
-    try{
-        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-        if(mysqli_connect_errno()){
-            throw new Exception(mysqli_connect_errno());
-        }
-        else {     
-            $genre = filter_input(INPUT_POST, 'new_genre', FILTER_SANITIZE_STRING);
-    
-            $sql = "INSERT INTO genres VALUES(NULL,'$genre')"; 
-            if(!mysqli_query($link, $sql)){
-                throw new Exception(mysqli_error($link));
-            }
-                        
-            mysqli_close($link);
-        }
-    } catch (Exception $e){
-        echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
-        echo '<br>Developer information: '.$e;
-    }
-}
-
-if(filter_has_var(INPUT_POST, 'addNationality')){
-    
-    require_once '../connect.php';
-    mysqli_report(MYSQLI_REPORT_STRICT);
-    
-    try{
-        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-        if(mysqli_connect_errno()){
-            throw new Exception(mysqli_connect_errno());
-        }
-        else {     
-            $nationality = filter_input(INPUT_POST, 'new_nationality', FILTER_SANITIZE_STRING);
-    
-            $sql = "INSERT INTO nationalities_languages VALUES(NULL,'$nationality')"; 
-            if(!mysqli_query($link, $sql)){
-                throw new Exception(mysqli_error($link));
-            }
-                        
-            mysqli_close($link);
-        }
-    } catch (Exception $e){
-        echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
-        echo '<br>Developer information: '.$e;
-    }
-}
-
-if(filter_has_var(INPUT_POST, 'ok')){
-    
-    $validation = true;
+    //$validation = false;
     
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+    $authorsID = filter_input(INPUT_POST, 'authorsID', FILTER_SANITIZE_NUMBER_INT);
+    $seriesID = filter_input(INPUT_POST, 'seriesID', FILTER_SANITIZE_NUMBER_INT);
     $original = filter_input(INPUT_POST, 'original', FILTER_SANITIZE_STRING);
-    $publisher = filter_input(INPUT_POST, 'publisher', FILTER_SANITIZE_NUMBER_INT);    
-    $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_NUMBER_INT);  
-    $genre = filter_input(INPUT_POST, 'genre', FILTER_SANITIZE_NUMBER_INT);        
-
+    $publisherID = filter_input(INPUT_POST, 'publisherID', FILTER_SANITIZE_NUMBER_INT);  
+    $languageID = filter_input(INPUT_POST, 'languageID', FILTER_SANITIZE_NUMBER_INT);  
+    $genreID = filter_input(INPUT_POST, 'genreID', FILTER_SANITIZE_NUMBER_INT);        
+    $publication = filter_input(INPUT_POST, 'publication');
     $isbn = filter_input(INPUT_POST, 'isbn', FILTER_SANITIZE_NUMBER_INT);
-    //check length
-    if((strlen($isbn)<13)){
-        $validation = false;
-        $_SESSION['e_isbn']="ISBN is too short (13 characters)";
-    }
-    if((strlen($isbn)>13) ){
-        $validation = false;
-        $_SESSION['e_isbn']="ISBN is too long (13 characters)";
-    }
+    $pages = filter_input(INPUT_POST, 'pages', FILTER_SANITIZE_NUMBER_INT);
+    
+    echo '<script>alert("'.$title.', '.$authorsID.', '.$seriesID.', '.$original.', '
+            .$publisherID.', '.$languageID.', '.$genreID.', '.$publication.', '
+            .$isbn.', '.$pages.'")</script>';
     
     //Remember written data
     $_SESSION['r_title'] = $title;
     $_SESSION['r_original'] = $original;
     $_SESSION['r_isbn'] = $isbn;
     
-    require_once '../connect.php';
+    /*require_once '../db/connect.php';
     mysqli_report(MYSQLI_REPORT_STRICT);
     
     try{
@@ -175,15 +70,21 @@ if(filter_has_var(INPUT_POST, 'ok')){
     } catch (Exception $e){
         echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
         echo '<br>Developer information: '.$e;
-    }
+    }*/
 }
 
-if(filter_has_var(INPUT_POST, 'add_author')){
+if(filter_has_var(INPUT_POST, 'addAuthor')){
     
-    $author = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_NUMBER_INT);
-    $book = $_SESSION['bookID'];
     
-    require_once '../connect.php';
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $nationalityID = filter_input(INPUT_POST, 'nationalityID', FILTER_SANITIZE_NUMBER_INT);
+    $image = null;
+    $birth = filter_input(INPUT_POST, 'birth');
+    if ($birth==''){
+        $birth = 'NULL';
+    }     
+    
+    require_once '../db/connect.php';
     mysqli_report(MYSQLI_REPORT_STRICT);
     
     try{
@@ -191,456 +92,220 @@ if(filter_has_var(INPUT_POST, 'add_author')){
         if(mysqli_connect_errno()){
             throw new Exception(mysqli_connect_errno());
         }
-        else {                 
-            $sql = "INSERT INTO book_author VALUES(NULL,'$book','$author')"; 
-                if(mysqli_query($link, $sql)){
-                    $_SESSION['addBook'] = true;
-                    header('Location: addBookNext.php');
-                }
-                else {
-                    throw new Exception(mysqli_error($link));
-                }
-            
-            
-            mysqli_close($link);
+        
+        if($nationalityID==0){
+            $nationality = filter_input(INPUT_POST, 'nationality', FILTER_SANITIZE_STRING);
+            $sql1 = "INSERT INTO nationalities_languages VALUES(NULL, '$nationality')";
+            if(!mysqli_query($link, $sql1)){
+                throw new Exception(mysqli_error($link));
+            }
+            else {
+                $nationalityID = mysqli_insert_id($link);
+            }
         }
+        
+        $sql2 = "INSERT INTO authors VALUES(NULL,'$name','$nationalityID', NULL, $birth)"; 
+        if(mysqli_query($link, $sql2)){
+            header('Location: addBook.php');
+        }
+        else {
+            throw new Exception(mysqli_error($link));
+        }
+        
+        mysqli_close($link);
     } catch (Exception $e){
         echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
         echo '<br>Developer information: '.$e;
     }
 }
 
-if(filter_has_var(INPUT_POST, 'add_newAuthor')){
-    
-    $validation = true;
-    
-    $name = filter_input(INPUT_POST, 'full_name', FILTER_SANITIZE_STRING);
-    $nationality = filter_input(INPUT_POST, 'nationality', FILTER_SANITIZE_NUMBER_INT);    
-    $book = $_SESSION['bookID'];
-    
-    //Remember written data
-    $_SESSION['r_full_name'] = $name;
-    
-    require_once '../connect.php';
-    mysqli_report(MYSQLI_REPORT_STRICT);
-    
-    try{
-        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-        if(mysqli_connect_errno()){
-            throw new Exception(mysqli_connect_errno());
-        }
-        else {     
-            if(file_exists($_FILES["image"]["tmp_name"])){
-                $imageData = mysqli_real_escape_string($link, file_get_contents($_FILES["image"]["tmp_name"]));
-                $imageType = mysqli_real_escape_string($link, $_FILES["image"]["type"]);    
-                if(substr($imageType, 0,5) != "image"){
-                    $validation = false;
-                    $_SESSION['e_image']="Only images are allowed";
-                }
-            }
-            else{
-                $validation = false;
-                $_SESSION['e_image']="Select image";
-            }
-            
-            // if all data are correct - create new user
-            if($validation==true){
-                $sql = "INSERT INTO authors VALUES('','$name','$nationality','$imageData')"; 
-                if(!mysqli_query($link, $sql)){
-                    throw new Exception(mysqli_error($link));
-                }
-            }
-            
-            $sql = "SELECT ID FROM authors ORDER BY id DESC LIMIT 1"; 
-            $result = mysqli_query($link, $sql);
-            if(!$result){              
-                throw new Exception(mysqli_error($link));
-            }
-            
-            $row = mysqli_fetch_assoc($result);
-            $author = $row['ID'];
-           
-            if(!mysqli_query($link, "INSERT INTO book_author VALUES(NULL,'$book','$author')")){
-                throw new Exception(mysqli_error($link));
-            }
-            
-            mysqli_close($link);
-        }
-    } catch (Exception $e){
-        echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
-        echo '<br>Developer information: '.$e;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Library - Add Book</title>
-        <link rel="stylesheet" href="../style/main_style.css"> 
-        <link rel="stylesheet" href="../style/form_style.css"> 
-        <link rel="stylesheet" href="../style/modal_style.css"> 
-        <link rel="stylesheet" href="../style/mysql_style.css"> 
-        <!-- <script> - JavaScript -->
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <meta name="author" content="Niki"><!-- Author of a page -->
-        <meta name="viewport" content="width-device-width, initial-scale=1.0"><!-- setting the viewport to make website look good on all devices -->                
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script><!-- reCaptcha -->    
+        <!--<meta http-equiv="refresh" content="30"> Refresh document every 30s -->       
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- setting the viewport to make website look good on all devices -->  
+        <title>Library - Add Book</title>
+        <link rel="stylesheet" href="../style/main_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/text_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/table_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/image_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/tooltip_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/modal_style.css" type="text/css">
+        <link rel="stylesheet" href="../style/form_style.css" type="text/css">        
+        <link rel="stylesheet" href="../style/ui_style.css" type="text/css">        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <!-- <script> - JavaScript -->    
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="../js/auto.js"></script>
     </head>
     <body>
         <nav class="sign">
             <ol>
                 <?php
                 if((isset($_SESSION['logged'])) && ($_SESSION['logged']==true)){
-                    echo'<li><a href="#">'.$_SESSION['name'].'</a>';
+                    echo'<li><a href="#" class="white">'.$_SESSION['name'].'</a>';
                     echo '<ul>';
-                    echo '<li><a href="../sign_nav/account.php">my account</a></li>' ;
-                    echo '<li><a href="../sign_nav/signOut.php">Sign Out</a></li>' ;
+                    echo '<li><a href="../sign_nav/account.php" class="white">my account</a></li>' ;
+                    echo '<li><a href="../sign_nav/signOut.php" class="white" class="white">Sign Out</a></li>' ;
                     echo '</ul></li>';
                 }
                 elseif ((isset($_SESSION['librarian'])) && ($_SESSION['librarian']==true)) {
-                    echo'<li><a href="#">'.$_SESSION['name'].'</a>';
+                    echo'<li><a href="#" class="white">'.$_SESSION['name'].'</a>';
                     echo '<ul>';
-                    echo '<li><a href="sign_nav/signOut.php">Sign Out</a></li>' ;
+                    echo '<li><a href="../sign_nav/signOut.php" class="white">Sign Out</a></li>' ;
                     echo '</ul></li>';
                 }
                 else {
-                    echo '<li><a href="../sign_nav/signUp.php">Sign up</a></li>';
-                    echo '<li><a href="../sign_nav/signIn.php">Sign in</a></li>';                      
+                    echo '<li><a href="../sign_nav/signUp.php" class="white">Sign up</a></li>';
+                    echo '<li><a href="../sign_nav/signIn.php" class="white">Sign in</a></li>';                      
                 }
                 ?>
             </ol>
         </nav>
         
         <header>
-            <img src="../image/logo.png" alt="Logo">LIBRARY     
+            <h1><img src="../image/logo.png" alt="Logo">LIBRARY</h1>     
         </header>
         
         <nav class="main">
             <ol>
-                <li><a href="../main_nav/books.php">books</a></li>
-                <li><a href="../main_nav/authors.php">authors</a></li>
+                <li><a href="../index.php" class="white">Home</a>
+                <li><a href="#" class="white">catalog</a>
+                    <ul>
+                        <li><a href="books.php" class="white">books</a></li>
+                        <li><a href="authors.php" class="white">authors</a></li>
+                    </ul>
+                </li>
                 <?php
                 if((isset($_SESSION['librarian'])) && ($_SESSION['librarian']==true)){
-                    echo '<li><a href="#">librarian</a>';
+                    echo '<li><a href="#" class="white">librarian</a>';
                     echo '<ul>';
-                    echo '<li><a href="#">Add librarian</a></li>' ;
-                    echo '<li><a href="addBook.php">Add book</a></li>' ;
+                    echo '<li><a href="signLibrarian.php" class="white">Add librarian</a></li>' ;
+                    echo '<li><a href="#" class="white">Add book</a></li>' ;
                     echo '</ul></li>';
                 }
                 ?>
-                <li><a href="#">contact</a></li>
+                <li><a href="contact.php" class="white">contact</a></li>
             </ol>
         </nav>
         
+        <form id="addBookForm" method="POST"></form>
+        <form id="addAuthorForm" method="POST"></form>
+        
         <div id="container_main">
-            <div class="row">
-            <div class="column">
-            <form id="1" method="POST" enctype="multipart/form-data"></form>
-            <input form="1" type="text" name="title" value="<?php
-                if(isset($_SESSION['r_title'])){
-                    echo $_SESSION['r_title'];
-                    unset($_SESSION['r_title']);
-                }
-                ?>" placeholder="Title" onfocus="this.placeholder=''" onblur="this.placeholder='Title'"><br>
-                
-            <input form="1" type="text" name="original" value="<?php 
-                if(isset($_SESSION['r_original'])){
-                    echo $_SESSION['r_original'];
-                    unset($_SESSION['r_original']);
-                }
-                ?>" placeholder="Original Title" onfocus="this.placeholder=''" onblur="this.placeholder='Original Title'"><br>
-
-            <select form="1" name="publisher" required>
-                <option style="color: #dc9276;" value="">Select publisher</option>
-                    <?php
-                    require_once '../connect.php';
-                    mysqli_report(MYSQLI_REPORT_STRICT);
-                    
-                    try {
-                        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-                        if(mysqli_connect_errno()){
-                            throw new Exception(mysqli_connect_errno());
-                        }
-                        
-                        $sql = "SELECT * FROM publishers ";
-                        $result = mysqli_query($link, $sql);
-                        if(!$result){
-                            throw new Exception(mysqli_error($link));
-                        }
-                        
-                        if(mysqli_num_rows($result)>0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo '<option value='.$row['ID'].'>'.$row['PUBLISHER'].'</option>';                                
-                            }
-                            mysqli_free_result($result);
-                        }
-                     
-                        mysqli_close($link);
-                    } catch (Exception $ex) {
-                        echo '<div class="error">Error! Failed to connect. Try again later.';
-                        echo 'Developer information:'.$ex.'</div>';
-                    }
-                    ?>
-            </select>
-            <form action="#add_publisher">
-                <button type="submit">Add</button><br>
-            </form>
-                
-            <select form="1" name="language" required>
-                <option style="color: #dc9276;" value="">Select language</option>
-                    <?php
-                    require_once '../connect.php';
-                    mysqli_report(MYSQLI_REPORT_STRICT);
-                    
-                    try {
-                        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-                        if(mysqli_connect_errno()){
-                            throw new Exception(mysqli_connect_errno());
-                        }
-                        
-                        $sql = "SELECT * FROM nationalities_languages";
-                        $result = mysqli_query($link, $sql);
-                        if(!$result){
-                            throw new Exception(mysqli_error($link));
-                        }
-                        
-                        if(mysqli_num_rows($result)>0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo '<option value='.$row['ID'].'>'.$row['NAME'].'</option>';                                
-                            }
-                            mysqli_free_result($result);
-                        }
-                     
-                        mysqli_close($link);
-                    } catch (Exception $ex) {
-                        echo '<div class="error">Error! Failed to connect. Try again later.';
-                        echo 'Developer information:'.$ex.'</div>';
-                    }
-                    ?>
-            </select>
-            
-            <form action="#add_language">
-                <button type="submit">Add</button><br>
-            </form>
-            
-            <select form="1" name="genre" required>
-                <option style="color: #dc9276;" value="">Select genre</option>
-                    <?php
-                    require_once '../connect.php';
-                    mysqli_report(MYSQLI_REPORT_STRICT);
-                    
-                    try {
-                        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-                        if(mysqli_connect_errno()){
-                            throw new Exception(mysqli_connect_errno());
-                        }
-                        
-                        $sql = "SELECT * FROM genres";
-                        $result = mysqli_query($link, $sql);
-                        if(!$result){
-                            throw new Exception(mysqli_error($link));
-                        }
-                        
-                        if(mysqli_num_rows($result)>0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo '<option value='.$row['ID'].'>'.$row['GENRE'].'</option>';                                
-                            }
-                            mysqli_free_result($result);
-                        }
-                     
-                        mysqli_close($link);
-                    } catch (Exception $ex) {
-                        echo '<div class="error">Error! Failed to connect. Try again later.';
-                        echo 'Developer information:'.$ex.'</div>';
-                    }
-                    ?>
-            </select>
-            
-            <form action="#add_genre">
-                <button type="submit">Add</button><br>
-            </form>
-            
-            <input form="1" type="text" name="isbn" placeholder="ISBN" onfocus="this.placeholder=''" onblur="this.placeholder='ISBN'" <?php 
-                if(isset($_SESSION['r_isbn'])){
-                    echo 'value='.$_SESSION['r_isbn'];
-                    unset($_SESSION['r_isbn']);
-                }
-                ?>><br>
-                <?php
-                if(isset($_SESSION['e_isbn'])){
-                    echo '<div class="error">'.$_SESSION['e_isbn'].'</div>';
-                    unset($_SESSION['e_isbn']);
-                }
-                ?> 
-            
-            <input form="1" type="file" name="image"><br>
-                <?php
-                if(isset($_SESSION['e_image'])){
-                    echo '<div class="error">'.$_SESSION['e_image'].'</div>';
-                    unset($_SESSION['e_image']);
-                }
-                ?> 
-            
-            <input form="1" type="submit" name="ok" value="OK">
-            
+            <div class="row row_padding">
+                <div class="row row_color mb-0">
+                    <button form="addBookForm" name="addBook" class="icon">
+                        <i class="material-icons">check</i>
+                        <span class="tooltip w-150">Add the book</span>
+                    </button>
+                    <div class="column">
+                        <input form="addBookForm" type="image" src="../image/new_book.jpg" alt="add book" class="big border">
+                    </div>
+                    <div class="column_main_list mb-0" style="margin-top: 0px; padding-top: 0px;">
+                        <div class="row_header">
+                            <header>
+                                <h2><input name="title" form="addBookForm" type="text" placeholder="Enter the book's title..." class="title" required></h2>
+                            </header>
+                        </div>
+                        <div class="row mb-0">
+                            <div class="column_half mb-0">
+                                <p class="lines_input">
+                                    <input id="authors_input" name="authors" form="addBookForm" style="width: 250px;" type="text" placeholder="Enter the book's authors..." required>
+                                    <input id="authorsID_auto" name="authorsID" form="addBookForm" type="hidden" value="0">
+                                    <label class="icon">
+                                        <a class="black" href="#addAuthorModal">
+                                            <i class="material-icons">add</i>
+                                            <span class="tooltip w-150">Add new author</span>
+                                        </a>
+                                    </label><br>
+                                    <input id="series_input" name="series" form="addBookForm" type="text" placeholder="Enter the book's series...">
+                                    <input id="volume" style="margin-left: 15px; width: 40px;" min="1" type="hidden" placeholder="vol.">
+                                    <input id="seriesID_auto" name="seriesID" form="addBookForm" type="hidden" value="0"><br/>
+                                    <input id="genre_input" name="genre" form="addBookForm" type="text" placeholder="Enter the book's genre..." required>
+                                    <input id="genreID_auto" name="genreID" form="addBookForm" type="hidden" value="0"><br>
+                                    <input id="original_input" name="original" form="addBookForm" type="text" placeholder="Enter the book's original title..."><br>
+                                </p>
+                                <p class="lines_input">
+                                    <input id="publisher_input" name="publisher" form="addBookForm" type="text" placeholder="Enter the book's publisher..." required>
+                                    <input id="publisherID_auto" name="publisherID" form="addBookForm" type="hidden" value="0"><br>
+                                    <input id="publication_input" name="publication" form="addBookForm" type="text" onfocus="(this.type='date')" placeholder="Enter the book's date of publication..." required><br>
+                                    <input name="language" form="addBookForm" id="language_input" type="text" placeholder="Enter the book's language..." required>
+                                    <input name="languageID" form="addBookForm" id="languageID_auto" type="hidden" value="0"><br>
+                                    <input id="pages_input" name="pages" form="addBookForm" type="number" placeholder="Enter the amount of book's pages..." required><br>
+                                    <input id="isbn_input" name="isbn" form="addBookForm" type="text" placeholder="Enter the book's ISBN..." required><br>
+                                    <input id="tags_input" name="tags" form="addBookForm" type="text" placeholder="Enter the book's tags..."><br>
+                                </p>
+                            </div>
+                            <div class="column_half mb-0">
+                                <p class="lines">
+                                    <span id="authors_span"></span><span id="authors_text"></span>
+                                    <span id="series_span"></span><span id="series_text"></span>
+                                    <span id="genre_span"></span><span id="genre_text"></span>
+                                    <span id="original_span"></span><span id="original_text"></span>
+                                </p>
+                                <p class="lines">
+                                    <span id="publisher_span"></span><span id="publisher_text"></span>
+                                    <span id="publication_span"></span><span id="publication_text"></span>
+                                    <span id="language_span"></span><span id="language_text"></span>
+                                    <span id="pages_span"></span><span id="pages_text"></span>
+                                    <span id="isbn_span"></span><span id="isbn_text"></span>
+                                    <span id="tags_span"></span><span id="tags_text"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="column">
-
-            <form method="POST">
-                <select name="author" required>
-                    <option value="">Select author</option>
-                    <?php
-                    require_once '../connect.php';
-                    mysqli_report(MYSQLI_REPORT_STRICT);
-                    
-                    try {
-                        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-                        if(mysqli_connect_errno()){
-                            throw new Exception(mysqli_connect_errno());
-                        }
-                        
-                        $sql = "SELECT * FROM authors ";
-                        $result = mysqli_query($link, $sql);
-                        if(!$result){
-                            throw new Exception(mysqli_error($link));
-                        }
-                        
-                        if(mysqli_num_rows($result)>0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo '<option value='.$row['ID'].'>'.$row['FULL_NAME'].'</option>';                                
-                            }
-                            mysqli_free_result($result);
-                        }
-                     
-                        mysqli_close($link);
-                    } catch (Exception $ex) {
-                        echo '<div class="error">Error! Failed to connect. Try again later.';
-                        echo 'Developer information:'.$ex.'</div>';
-                    }
-                    ?>
-                </select><br>
-                <input type="submit" name="add_author" value="Add author">
-            </form>
-            </div>
-            <div class="column">
-
-            
-            <form method="POST" enctype="multipart/form-data">
-                <input type="text" name="full_name" value="<?php
-                                if(isset($_SESSION['r_full_name'])){
-                    echo $_SESSION['r_full_name'];
-                    unset($_SESSION['r_full_name']);
-                }
-                
-                ?>" placeholder="Full name" onfocus="this.placeholder=''" onblur="this.placeholder='Full name'"><br>
-                
-                <select name="nationality" required>
-                    <option value="">Select nationality</option>
-                    <?php
-                    require_once '../connect.php';
-                    mysqli_report(MYSQLI_REPORT_STRICT);
-                    
-                    try {
-                        $link = mysqli_connect($host, $db_user, $db_password, $db_name);
-                        if(mysqli_connect_errno()){
-                            throw new Exception(mysqli_connect_errno());
-                        }
-                        
-                        $sql = "SELECT * FROM nationalities_languages";
-                        $result = mysqli_query($link, $sql);
-                        if(!$result){
-                            throw new Exception(mysqli_error($link));
-                        }
-                        
-                        if(mysqli_num_rows($result)>0){
-                            while($row = mysqli_fetch_assoc($result)){
-                                echo '<option value='.$row['ID'].'>'.$row['NAME'].'</option>';                                
-                            }
-                            mysqli_free_result($result);
-                        }
-                     
-                        mysqli_close($link);
-                    } catch (Exception $ex) {
-                        echo '<div class="error">Error! Failed to connect. Try again later.';
-                        echo 'Developer information:'.$ex.'</div>';
-                    }
-                    ?>
-                </select>
-                <button><a href="#add_nationality">Add</a></button><br>
-                
-                <input type="file" name="image"><br>
-                <?php
-                if(isset($_SESSION['e_image'])){
-                    echo '<div class="error">'.$_SESSION['e_image'].'</div><br>';
-                    unset($_SESSION['e_image']);
-                }
-                ?> 
-                <input type="submit" name="add_newAuthor" value="Add new author">                
-            </form>
-            </div>
-            </div>
-        </div>
+        </div> 
         
-        <div id="add_publisher" class="modal">
+        <div id="addAuthorModal" class="modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <a href="#" class="closebtn">×</a>
                     <div class="modal_container">
-                        <h2>Add publisher</h2>
-                        <form method="POST">
-                            <input type="text" name="new_publisher"><br>
-                            <input style="margin-bottom: 20px;" type="submit" name="addPublisher" value="OK">
-                        </form>
+                        <div class="row">
+                            <div class="column">
+                                <input form="addAuthorForm" type="image" src="../image/new_author.jpg" alt="add author image" class="small border">
+                            </div>
+                            <div class="column_main_list mb-0">
+                                <div class="row_header">
+                                    <header>
+                                        <h2><input name="name" form="addAuthorForm" type="text" placeholder="Enter the author's full name..." class="title" required></h2>
+                                    </header>
+                                </div>
+                                <div class="row mb-0">
+                                    <div class="column_half mb-0">
+                                        <p class="lines_input">
+                                            <input id="nationality_auto" name="nationality" form="addAuthorForm" type="text" placeholder="Enter the author's nationality..." required>
+                                            <input id="nationalityID_auto" name="nationalityID" form="addAuthorForm" type="hidden" value="0"> <br/>
+                                            <input name="birth" form="addAuthorForm" type="text" onfocus="(this.type='date')" placeholder="Enter the author's birth date..."><br>
+                                        </p>
+                                    </div>
+                                    <div class="column_half mb-0">
+                                        <p class="lines">
+                                            <span class="black">Nationality:</span><br>
+                                            <span class="black">Birth date:</span><br/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button form="addAuthorForm" name="addAuthor" class="icon">
+                                <i class="material-icons">check</i>
+                                <span class="tooltip w-150">Add the author</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div id="add_language" class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <a href="#" class="closebtn">×</a>
-                    <div class="modal_container">
-                        <h2>Add language</h2>
-                        <form method="POST">
-                            <input type="text" name="new_language"><br>
-                            <input style="margin-bottom: 20px" type="submit" name="addLanguage" value="OK">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="add_genre" class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <a href="#" class="closebtn">×</a>
-                    <div class="modal_container">
-                        <h2>Add genre</h2>
-                        <form method="POST">
-                            <input type="text" name="new_genre"><br>
-                            <input style="margin-bottom: 20px" type="submit" name="addGenre" value="OK">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="add_nationality" class="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <header class="container">
-                        <a href="#" class="closebtn">×</a>
-                        <h2>Add nationality</h2>
-                    </header>
-                    <div class="container">
-                        <form method="POST">
-                            <input style="margin-bottom: 20px" type="text" name="new_nationality">
-                            <input type="submit" name="addNationality" value="ok">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </body>
 </html>
