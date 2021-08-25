@@ -87,7 +87,7 @@ if(filter_has_var(INPUT_POST, 'signUp')){
         $_SESSION['r_terms'] = true;
     }
     
-    require_once '../connect.php';
+    require_once '../db/connect.php';
     mysqli_report(MYSQLI_REPORT_STRICT);
     
     try{
@@ -157,7 +157,9 @@ if(filter_has_var(INPUT_POST, 'signUp')){
         <title>Library - Sign Up</title>
         <!-- CSS -->
         <link rel="stylesheet" href="../style/main_style.css"> 
+        <link rel="stylesheet" href="../style/text_style.css"> 
         <link rel="stylesheet" href="../style/form_style.css"> 
+        <link rel="stylesheet" href="../style/table_style.css"> 
         <!-- <script> - JavaScript -->
         <meta charset="UTF-8">
         <meta name="author" content="Niki"><!-- Author of a page -->
@@ -167,108 +169,129 @@ if(filter_has_var(INPUT_POST, 'signUp')){
     <body>        
         <nav class="sign">
             <ol>
-                <li><a href="#">Sign up</a></li>
-                <li><a href="signIn.php">Sign in</a></li>                   
+                <li><a href="#" class="white">Sign up</a></li>'
+                <li><a href="signIn.php" class="white">Sign in</a></li>                  
             </ol>
         </nav>
         
         <header>
-            <img src="../image/logo.png" alt="Logo">LIBRARY     
+            <h1><img src="../image/logo.png" alt="Logo">LIBRARY</h1>     
         </header>
         
         <nav class="main">
             <ol>
-                <li><a href="../main_nav/books.php">books</a></li>
-                <li><a href="../main_nav/authors.php">authors</a></li>
+                <li><a href="../index.php" class="white">Home</a>
+                <li><a href="#" class="white">catalog</a>
+                    <ul>
+                        <li><a href="../main_nav/books.php" class="white">books</a></li>
+                        <li><a href="../main_nav/authors.php" class="white">authors</a></li>
+                    </ul>
+                </li>
                 <?php
                 if((isset($_SESSION['librarian'])) && ($_SESSION['librarian']==true)){
-                    echo '<li><a href="#">librarian</a>';
+                    echo '<li><a href="#" class="white">librarian</a>';
                     echo '<ul>';
-                    echo '<li><a href="../main_nav/signLibrarian.php">Add librarian</a></li>' ;
-                    echo '<li><a href="../main_nav/addBook.php">Add book</a></li>' ;
+                    echo '<li><a href="../main_nav/signLibrarian.php" class="white">Add librarian</a></li>' ;
+                    echo '<li><a href="../main_nav/addBook.php" class="white">Add book</a></li>' ;
                     echo '</ul></li>';
                 }
                 ?>
-                <li><a href="#">contact</a></li>
+                <li><a href="../main_nav/contact.php" class="white">contact</a></li>
             </ol>
         </nav>
         
-        <div id="container_main">
-            <!-- Sign Up form -->
-            <form method="POST">
-                <input type="text" name="name" value="<?php
-                if(isset($_SESSION['r_name'])){
-                    echo $_SESSION['r_name'];
-                    unset($_SESSION['r_name']);
-                }
-                ?>" placeholder="Name" onfocus="this.placeholder=''" onblur="this.placeholder='Name'"><br>
-                <?php
-                if(isset($_SESSION['e_name'])){
-                    echo '<div class="error">'.$_SESSION['e_name'].'</div>';
-                    unset($_SESSION['e_name']);
-                }
-                ?>
-                <input type="text" name="email" value="<?php 
-                if(isset($_SESSION['r_email'])){
-                    echo $_SESSION['r_email'];
-                    unset($_SESSION['r_email']);
-                }
-                ?>" placeholder="Email" onfocus="this.placeholder=''" onblur="this.placeholder='Email'"><br>
-                <?php
-                if(isset($_SESSION['e_email'])){
-                    echo '<div class="error">'.$_SESSION['e_email'].'</div>';
-                    unset($_SESSION['e_email']);
-                }
-                ?>
-                <input type="text" name="login" value="<?php 
-                if(isset($_SESSION['r_login'])){
-                    echo $_SESSION['r_login'];
-                    unset($_SESSION['r_login']);
-                }
-                ?>" placeholder="Login" onfocus="this.placeholder=''" onblur="this.placeholder='Login'"><br>
-                <?php
-                if(isset($_SESSION['e_login'])){
-                    echo '<div class="error">'.$_SESSION['e_login'].'</div>';
-                    unset($_SESSION['e_login']);
-                }
-                ?>
-                <input type="password" name="password1" placeholder="Password" onfocus="this.placeholder=''" onblur="this.placeholder='Password'"><br>
-                <?php
-                if(isset($_SESSION['e_password1'])){
-                    echo '<div class="error">'.$_SESSION['e_password1'].'</div>';
-                    unset($_SESSION['e_password1']);
-                }
-                ?>
-                <input type="password" name="password2" placeholder="Confirm Password" onfocus="this.placeholder=''" onblur="this.placeholder='Confirm Password'"><br>
-                <?php
-                if(isset($_SESSION['e_password2'])){
-                    echo '<div class="error">'.$_SESSION['e_password2'].'</div>';
-                    unset($_SESSION['e_password2']);
-                }
-                ?>
-                <div class="checkbox"><label>
-                    <input type="checkbox" name="terms" <?php 
-                if(isset($_SESSION['r_terms'])){
-                    echo "checked";
-                    unset($_SESSION['r_terms']);
-                }
-                ?>/> I agree to the terms of use and Data Privacy Policy
-                    </label></div><br>
-                <?php
-                if(isset($_SESSION['e_terms'])){
-                    echo '<div class="error">'.$_SESSION['e_terms'].'</div>';
-                    unset($_SESSION['e_terms']);
-                }
-                ?>
-                <div class="g-recaptcha" data-sitekey="6LdpfqUbAAAAAIcTlvHv-m7o5Tna-ui5yUpobwfx"></div><!-- reCaptcha -->
-                <?php
-                if(isset($_SESSION['e_bot'])){
-                    echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
-                    unset($_SESSION['e_bot']);
-                }
-                ?>
-                <input type="submit" name="signUp" value="Sign up">
-            </form>
+        <div id="container_main">  
+            <div class="row row_padding">              
+                <div class="row mb-0">
+                    <div class="column_half mb-0">
+                        <!-- Sign Up form -->
+                        <form id="registerForm" method="POST"></form>
+                        <?php
+                        if(isset($_SESSION['error'])){
+                            echo '<div class="error">'.$_SESSION['error'].'</div>';
+                            unset($_SESSION['error']);
+                        }
+                        ?>
+                        <form id="loginForm" action="logIn.php" method="POST"></form> 
+                        <p class="lines_input">
+                            <input form="registerForm" type="text" name="name" value="<?php
+                            if(isset($_SESSION['r_name'])){
+                                echo $_SESSION['r_name'];
+                                unset($_SESSION['r_name']);
+                            }
+                            ?>" placeholder="Name" onfocus="this.placeholder=''" onblur="this.placeholder='Name'"><br>
+                            <?php
+                            if(isset($_SESSION['e_name'])){
+                                echo '<div class="error">'.$_SESSION['e_name'].'</div>';
+                                unset($_SESSION['e_name']);
+                            }   
+                            ?>
+                            <input form="registerForm" type="text" name="email" value="<?php 
+                            if(isset($_SESSION['r_email'])){
+                                echo $_SESSION['r_email'];
+                                unset($_SESSION['r_email']);
+                            }
+                            ?>" placeholder="Email" onfocus="this.placeholder=''" onblur="this.placeholder='Email'"><br>
+                            <?php
+                            if(isset($_SESSION['e_email'])){
+                                echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+                                unset($_SESSION['e_email']);
+                            }
+                            ?>
+                            <input form="registerForm" type="text" name="login" value="<?php 
+                            if(isset($_SESSION['r_login'])){
+                                echo $_SESSION['r_login'];
+                                unset($_SESSION['r_login']);
+                                }
+                                ?>" placeholder="Login" onfocus="this.placeholder=''" onblur="this.placeholder='Login'"><br>
+                            <?php
+                            if(isset($_SESSION['e_login'])){
+                                echo '<div class="error">'.$_SESSION['e_login'].'</div>';
+                                unset($_SESSION['e_login']);
+                            }
+                            ?>
+                            <input form="registerForm" type="password" name="password1" placeholder="Password" onfocus="this.placeholder=''" onblur="this.placeholder='Password'"><br>
+                            <?php
+                            if(isset($_SESSION['e_password1'])){
+                                echo '<div class="error">'.$_SESSION['e_password1'].'</div>';
+                                unset($_SESSION['e_password1']);
+                            }
+                            ?>
+                            <input form="registerForm" type="password" name="password2" placeholder="Confirm Password" onfocus="this.placeholder=''" onblur="this.placeholder='Confirm Password'"><br>
+                            <?php
+                            if(isset($_SESSION['e_password2'])){
+                                echo '<div class="error">'.$_SESSION['e_password2'].'</div>';
+                                unset($_SESSION['e_password2']);
+                            }
+                            ?>
+                            <label class="pointer" style="margin-left: -30px; white-space: nowrap;">
+                                <input form="registerForm" type="checkbox" name="terms"/> I agree to the terms of use and Data Privacy Policy
+                            </label><br>
+                            <?php
+                            if(isset($_SESSION['e_terms'])){
+                                echo '<div class="error">'.$_SESSION['e_terms'].'</div>';
+                                unset($_SESSION['e_terms']);
+                            }
+                            ?>
+                        </p>
+                        
+                        <div style="margin: auto; width: 300px;" class="g-recaptcha" data-sitekey="6LdpfqUbAAAAAIcTlvHv-m7o5Tna-ui5yUpobwfx"></div><!-- reCaptcha -->
+                        <?php
+                        if(isset($_SESSION['e_bot'])){
+                            echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
+                            unset($_SESSION['e_bot']);
+                        }
+                        ?>
+                        <p class="lines_input">
+                            <input form="registerForm" type="submit" name="signUp" value="Sign up">
+                        </p>
+                        
+                    </div>
+                    <div class="column_half column_color">
+                        a
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
