@@ -1,0 +1,70 @@
+h1 {
+    color: #c13334;
+    font-size: 70px;
+    font-weight: bold;
+    margin: 0;
+    margin-top: 5px;
+    text-align: center;
+}
+
+h2 {
+    border: none;
+    color: #c13334;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0;
+    margin-left: 15px;
+    padding: 0;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+h3 {
+    color: #000000;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+h4 {
+    color: #000000;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 10px;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+h4.center {
+    text-align: center;
+}
+
+p.lines_input {
+    line-height: 250%;
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 305px;
+}
+
+p.line {
+    margin: 0;
+    text-align: center;
+}
+
+.lines {
+    line-height: 200%;
+}
+
+.text-hidden{
+    visibility: hidden;
+}
+
+.text-visible{
+    visibility: visible;
+}

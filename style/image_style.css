@@ -1,0 +1,63 @@
+span.black {
+    color: #000000;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+    text-transform: capitalize;
+}
+
+span.color40 {
+    color: #c13334;
+    font-size: 40px;
+}
+
+span.color20 {
+    color: #c13334;
+    font-size: 20px;   
+    font-weight: bold;
+    padding: 10px;    
+}
+
+img.small, input[type=image].small {
+   max-width: 150px; 
+}
+
+img.big, input[type=image].big{
+    max-width: 300px;
+}
+
+img.border, input[type=image].border{
+    border: 2px solid #c13334;
+}
+
+img.biggest{
+    max-width: 600px
+}
+
+label.icon {
+    background-color: #ffffff;
+    box-shadow: 3px 3px 30px 5px #dbac78;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    line-height: 100%;
+    margin: 5px;
+    position: relative;
+}
+
+.icon:hover {
+    color: #c13334;
+}
+
+i.material-icons.md-20 {
+    cursor: pointer;
+    font-size: 20px; 
+}
+
+i.material-icons:hover {
+    color: #c13334;
+}
+
+span {
+    text-transform: capitalize;
+}
