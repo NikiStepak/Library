@@ -1,119 +1,66 @@
-$(function(){
-    $('#nationality_auto').autocomplete({
-        source: "../db/languages.php",
-        minLength: 1,
-        select: function(event, ui) {
-            event.preventDefault();       
-            $(this).val(ui.item.label);
-            $('#nationalityID_auto').val(ui.item.id);
+$(function(){  
+    $("#title_input").change(function() {       
+        if($(this).val()){
+            $(this).css("background-color", "#ebebeb");       
+        }
+        else {
+            $(this).css("background-color", "#ffffff");
         }
     });
 });
 
 $(function(){
-    $('#language_input').autocomplete({
-        source: "../db/languages.php",
-        minLength: 1,
-        select: function(event, ui) {
-            event.preventDefault(); 
-            $(this).val(ui.item.label);
-            $('#languageID_auto').val(ui.item.id);
-        }
+    
+    $("#authors_input").chosen({
+        no_results_text: "Oops, nothing found!"
     });
-});
-
-$(function(){
-    $('#genre_input').autocomplete({
-        source: "../db/genres.php",
-        minLength: 1,
-        select: function(event, ui) {
-            event.preventDefault();       
-            $(this).val(ui.item.label);
-            $('#genreID_auto').val(ui.item.id);
+    
+    $("#authors_input").change(function() {       
+        if($(this).val()){
+            $(this).css("background-color", "#ebebeb");
+            $('#authors_span').addClass("black");
+            $('#authors_span').text("Author:");
+            $('#authors_text').text($(this).val());
+            if(!$('#authors_text').next("br").length){
+                $( "<br>" ).insertAfter( "#authors_text" );
+            }        
         }
-    });
-});
-
-$(function(){
-    $('#series_input').autocomplete({
-        source: "../db/series.php",
-        minLength: 1,
-        select: function(event, ui) {
-            event.preventDefault(); 
-            $(this).val(ui.item.label);
-            $('#seriesID_auto').val(ui.item.id);
-        }
-    });
-});
-
-$(function(){
-    function split( val ) {
-      return val.split( /,\s*/ );
-    }
-    function extractLast( term ) {
-      return split( term ).pop();
-    }
- 
-    $( "#authors_input" )
-      // don't navigate away from the field on tab when selecting an item
-      .bind( "keydown", function( event ) {
-        if ( event.keyCode === $.ui.keyCode.TAB &&
-            $( this ).autocomplete( "instance" ).menu.active ) {
-          event.preventDefault();
-        }
-      })
-      .autocomplete({
-        minLength: 1,
-        source: function( request, response ) {
-          // delegate back to autocomplete, but extract the last term
-          $.getJSON("../db/genres.php", { term : extractLast( request.term )},response);
-        },
-        focus: function() {
-          // prevent value inserted on focus
-          return false;
-        },
-        select: function( event, ui ) {
-          event.preventDefault();
-          var terms = split( this.value );
-          var termsID = split($('#authorsID_auto').val());
-          // remove the current input
-          terms.pop();
-          termsID.pop();          
-          // add the selected item
-          terms.push(ui.item.label);
-          termsID.push(ui.item.id);
-          // add placeholder to get the comma-and-space at the end
-          terms.push( "" );
-          termsID.push( "" );
-          this.value = terms.join( ", " );
-          $('#authorsID_auto').val(termsID.join(","));
-          return false;
-        }
-      });
-});
-
-$(function(){
-    $('#publisher_input').autocomplete({
-        source: "../db/publishers.php",
-        minLength: 1,
-        select: function(event, ui) {
-            event.preventDefault(); 
-            $(this).val(ui.item.label);
-            $('#publisherID_auto').val(ui.item.id);
+        else {
+            $(this).css("background-color", "#ffffff");
+            $('#authors_span').removeClass("black");
+            $('#authors_span').text("");
+            $('#authors_text').text("");
+            $('#authors_text').next("br").remove();
+            $('#authorsID_auto').val("0");
+            $(".default").css("width", "200px");
         }
     });
 });
 
 $(function() {
+    $('#series_input').autocomplete({
+        source: "../db/series.php",
+        minLength: 0,
+        select: function(event, ui) {
+            event.preventDefault(); 
+            $(this).val(ui.item.label);
+        }
+    });
+    
     $("#series_input").change(function() {       
         if($(this).val()){
             $(this).css("background-color", "#ebebeb");
-            $(this).css("width", "220px");
+            $(this).css("width", "216px");
             $('#volume').css("visibility", "visible;");
             $('#volume').attr("type", "number");
             $('#series_span').addClass("black");
             $('#series_span').text("Series:");
-            $('#series_text').text($(this).val()); 
+            if($('#volume').val()){
+                $('#series_text').text($(this).val()+" (volume: "+$('#volume').val()+")");
+            }
+            else{
+                $('#series_text').text($(this).val());
+            } 
             if(!$('#series_text').next("br").length){
                 $( "<br>" ).insertAfter( "#series_text" );
             }
@@ -128,9 +75,7 @@ $(function() {
             $('#series_text').next("br").remove();
         }
     });
-});
-
-$(function() {
+    
     $("#volume").change(function() {       
         if($(this).val()){
             $(this).css("background-color", "#ebebeb");
@@ -139,32 +84,23 @@ $(function() {
         }
         else {
             $(this).css("background-color", "#ffffff");
+            if($("#series_input").val()){
+                $('#series_text').text($('#series_input').val());
+            }
         }
     });
 });
 
 $(function() {
-    $("#authors_input").change(function() {       
-        if($(this).val()){
-            $(this).css("background-color", "#ebebeb");
-            $('#authors_span').addClass("black");
-            $('#authors_span').text("Author:");
-            $('#authors_text').text($(this).val());
-            if(!$('#authors_text').next("br").length){
-                $( "<br>" ).insertAfter( "#authors_text" );
-            }        }
-        else {
-            $(this).css("background-color", "#ffffff");
-            $('#authors_span').removeClass("black");
-            $('#authors_span').text("");
-            $('#authors_text').text("");
-            $('#authors_text').next("br").remove();
-            $('#authorsID_auto').val("0");
+    $('#genre_input').autocomplete({
+        source: "../db/genres.php",
+        minLength: 1,
+        select: function(event, ui) {
+            event.preventDefault();       
+            $(this).val(ui.item.label);
         }
     });
-});
-
-$(function() {
+    
     $("#genre_input").change(function() {       
         if($(this).val()){
             $(this).css("background-color", "#ebebeb");
@@ -205,6 +141,14 @@ $(function() {
 });
 
 $(function() {
+    $('#publisher_input').autocomplete({
+        source: "../db/publishers.php",
+        minLength: 1,
+        select: function(event, ui) {
+            event.preventDefault(); 
+            $(this).val(ui.item.label);
+        }
+    });
     $("#publisher_input").change(function() {       
         if($(this).val()){
             $(this).css("background-color", "#ebebeb");
@@ -245,6 +189,14 @@ $(function() {
 });
 
 $(function() {
+    $('#language_input').autocomplete({
+        source: "../db/languages.php",
+        minLength: 1,
+        select: function(event, ui) {
+            event.preventDefault(); 
+            $(this).val(ui.item.label);
+        }
+    });
     $("#language_input").change(function() {       
         if($(this).val()){
             $(this).css("background-color", "#ebebeb");
@@ -320,6 +272,51 @@ $(function() {
             $('#tags_span').text("");
             $('#tags_text').text("");
             $('#tags_text').next("br").remove();
+        }
+    });
+});
+
+$(function(){
+    $('#nationality_input').autocomplete({
+        source: "../db/nationalities.php",
+        minLength: 1,
+        select: function(event, ui) {
+            event.preventDefault();       
+            $(this).val(ui.item.label);
+        }
+    });
+    
+    $("#nationality_input").change(function() {       
+        if($(this).val()){
+            $('#nationality_span').addClass("black");
+            $('#nationality_span').text("Nationality:");
+            $('#nationality_text').text($(this).val());
+            if(!$('#nationality_text').next("br").length){
+                $( "<br>" ).insertAfter( "#nationality_text" );
+            }        }
+        else {
+            $('#nationality_span').removeClass("black");
+            $('#nationality_span').text("");
+            $('#nationality_text').text("");
+            $('#nationality_text').next("br").remove();
+        }
+    });
+});
+
+$(function() {
+    $("#birth_input").change(function() {       
+        if($(this).val()){
+            $('#birth_span').addClass("black");
+            $('#birth_span').text("Birth date:");
+            $('#birth_text').text($(this).val());
+            if(!$('#birth_text').next("br").length){
+                $( "<br>" ).insertAfter( "#birth_text" );
+            }        }
+        else {
+            $('#birth_span').removeClass("black");
+            $('#birth_span').text("");
+            $('#birth_text').text("");
+            $('#birth_text').next("br").remove();
         }
     });
 });

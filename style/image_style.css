@@ -1,21 +1,5 @@
-span.black {
-    color: #000000;
-    font-size: 15px;
-    font-weight: bold;
-    padding: 10px;
-    text-transform: capitalize;
-}
-
-span.color40 {
-    color: #c13334;
-    font-size: 40px;
-}
-
-span.color20 {
-    color: #c13334;
-    font-size: 20px;   
-    font-weight: bold;
-    padding: 10px;    
+img.smallest {
+    max-width: 50px;
 }
 
 img.small, input[type=image].small {
@@ -58,6 +42,6 @@ i.material-icons:hover {
     color: #c13334;
 }
 
-span {
-    text-transform: capitalize;
+img.pointer:hover {
+    box-shadow: 0px 0px 10px 2px black;
 }

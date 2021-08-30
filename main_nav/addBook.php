@@ -7,31 +7,31 @@ session_start();
           echo '<script>alert("a")</script>';
 }*/
 
+$addBook = true;
+
 if(filter_has_var(INPUT_POST, 'addBook')){
     
-    //$validation = false;
-    
+    //$validation = false;   
     $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
-    $authorsID = filter_input(INPUT_POST, 'authorsID', FILTER_SANITIZE_NUMBER_INT);
-    $seriesID = filter_input(INPUT_POST, 'seriesID', FILTER_SANITIZE_NUMBER_INT);
+    $series = filter_input(INPUT_POST, 'series', FILTER_SANITIZE_STRING);
     $original = filter_input(INPUT_POST, 'original', FILTER_SANITIZE_STRING);
-    $publisherID = filter_input(INPUT_POST, 'publisherID', FILTER_SANITIZE_NUMBER_INT);  
-    $languageID = filter_input(INPUT_POST, 'languageID', FILTER_SANITIZE_NUMBER_INT);  
-    $genreID = filter_input(INPUT_POST, 'genreID', FILTER_SANITIZE_NUMBER_INT);        
+    $publisher = filter_input(INPUT_POST, 'publisher', FILTER_SANITIZE_STRING);  
+    $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_STRING);  
+    $genre = filter_input(INPUT_POST, 'genre', FILTER_SANITIZE_STRING);        
     $publication = filter_input(INPUT_POST, 'publication');
     $isbn = filter_input(INPUT_POST, 'isbn', FILTER_SANITIZE_NUMBER_INT);
     $pages = filter_input(INPUT_POST, 'pages', FILTER_SANITIZE_NUMBER_INT);
-    
-    echo '<script>alert("'.$title.', '.$authorsID.', '.$seriesID.', '.$original.', '
-            .$publisherID.', '.$languageID.', '.$genreID.', '.$publication.', '
-            .$isbn.', '.$pages.'")</script>';
     
     //Remember written data
     $_SESSION['r_title'] = $title;
     $_SESSION['r_original'] = $original;
     $_SESSION['r_isbn'] = $isbn;
     
-    /*require_once '../db/connect.php';
+    if ($publication==''){
+        $publication = 'NULL';
+    }     
+    
+    require_once '../db/connect.php';
     mysqli_report(MYSQLI_REPORT_STRICT);
     
     try{
@@ -39,46 +39,173 @@ if(filter_has_var(INPUT_POST, 'addBook')){
         if(mysqli_connect_errno()){
             throw new Exception(mysqli_connect_errno());
         }
-        else {     
-            if(file_exists($_FILES["image"]["tmp_name"])){
-                $imageData = mysqli_real_escape_string($link, file_get_contents($_FILES["image"]["tmp_name"]));
-                $imageType = mysqli_real_escape_string($link, $_FILES["image"]["type"]);    
-                if(substr($imageType, 0,5) != "image"){
-                    $validation = false;
-                    $_SESSION['e_image']="Only images are allowed";
-                }
+            
+        //series
+        $sql_check_series = "SELECT * FROM series WHERE series.SERIES LIKE '$series'";
+        $result_check_series = mysqli_query($link, $sql_check_series);
+        if(!$result_check_series){
+            throw new Exception(mysqli_error($link));
+        }
+         
+        if(mysqli_num_rows($result_check_series)>0){
+            $row = mysqli_fetch_assoc($result_check_series);
+            $seriesID = $row['ID'];
+        }
+        elseif ($series=='') {
+            $seriesID = '0';
+        }
+        else{
+            $sql1 = "INSERT INTO series VALUES(NULL, '$series')";
+            
+            if(!mysqli_query($link, $sql1)){
+                throw new Exception(mysqli_error($link));
             }
-            else{
+            else {
+                $seriesID = mysqli_insert_id($link);
+            }
+        }
+        mysqli_free_result($result_check_series);
+        
+        //publisher
+        $sql_check_publisher = "SELECT * FROM publishers WHERE publishers.PUBLISHER LIKE '$publisher'";
+        $result_check_publisher = mysqli_query($link, $sql_check_publisher);
+        if(!$result_check_publisher){
+            throw new Exception(mysqli_error($link));
+        }
+         
+        if(mysqli_num_rows($result_check_publisher)>0){
+            $row = mysqli_fetch_assoc($result_check_publisher);
+            $publisherID = $row['ID'];
+        }
+        elseif ($publisher=='') {
+            $publisherID = 'NULL';
+        }
+        else{
+            $sql1 = "INSERT INTO publishers VALUES(NULL, '$publisher')";
+            
+            if(!mysqli_query($link, $sql1)){
+                throw new Exception(mysqli_error($link));
+            }
+            else {
+                $publisherID = mysqli_insert_id($link);
+            }
+        }
+        mysqli_free_result($result_check_publisher);
+        
+        //language
+        $sql_check_language = "SELECT * FROM languages WHERE languages.LANGUAGE LIKE '$language'";
+        $result_check_language = mysqli_query($link, $sql_check_language);
+        if(!$result_check_language){
+            throw new Exception(mysqli_error($link));
+        }
+         
+        if(mysqli_num_rows($result_check_language)>0){
+            $row = mysqli_fetch_assoc($result_check_language);
+            $languageID = $row['ID'];
+        }
+        elseif ($language=='') {
+            $languageID = 'NULL';
+        }
+        else{
+            $sql1 = "INSERT INTO languages VALUES(NULL, '$language')";
+            
+            if(!mysqli_query($link, $sql1)){
+                throw new Exception(mysqli_error($link));
+            }
+            else {
+                $languageID = mysqli_insert_id($link);
+            }
+        }
+        mysqli_free_result($result_check_language);
+        
+        //genre
+        $sql_check_genre = "SELECT * FROM genres WHERE genres.GENRE LIKE '$genre'";
+        $result_check_genre = mysqli_query($link, $sql_check_genre);
+        if(!$result_check_genre){
+            throw new Exception(mysqli_error($link));
+        }
+         
+        if(mysqli_num_rows($result_check_genre)>0){
+            $row = mysqli_fetch_assoc($result_check_genre);
+            $genreID = $row['ID'];
+        }
+        elseif ($genre=='') {
+            $genreID = 'NULL';
+        }
+        else{
+            $sql1 = "INSERT INTO genres VALUES(NULL, '$genre')";
+            
+            if(!mysqli_query($link, $sql1)){
+                throw new Exception(mysqli_error($link));
+            }
+            else {
+                $genreID = mysqli_insert_id($link);
+            }
+        }
+        mysqli_free_result($result_check_genre);
+        
+        $validation = true;
+        if(file_exists($_FILES["image"]["tmp_name"])){
+            $imageData = mysqli_real_escape_string($link, file_get_contents($_FILES["image"]["tmp_name"]));
+            $imageType = mysqli_real_escape_string($link, $_FILES["image"]["type"]);    
+            if(substr($imageType, 0,5) != "image"){
                 $validation = false;
-                $_SESSION['e_image']="Select image";
+            }
+        }
+        else{
+            $validation = false;
+        }
+        
+        if(!$validation){
+            $sql = "INSERT INTO books VALUES(NULL,'$title','$isbn','$publisherID','$original','$languageID', LOAD_FILE('D:/A/XAMPP/xampp/htdocs/library/image/book.jpg'), '$genreID', '$seriesID','$publication', '$pages', '', 0, 0)";
+        }
+        else {
+            $sql = "INSERT INTO books VALUES(NULL,'$title','$isbn','$publisherID','$original','$languageID','$imageData', '$genreID', '$seriesID','$publication', '$pages', '', 0, 0)";
+        }
+         
+        if(mysqli_query($link, $sql)){
+            $bookID = mysqli_insert_id($link);
+        }
+        else {
+            throw new Exception(mysqli_error($link));
+        }
+        
+        foreach ($_POST['authors'] as $author) {        
+            $sql_check = "SELECT * FROM authors WHERE authors.FULL_NAME LIKE '$author'";
+            $result_check = mysqli_query($link, $sql_check);
+            if(!$result_check){
+                throw new Exception(mysqli_error($link));
             }
             
-            // if all data are correct - create new user
-            if($validation==true){
-                $sql = "INSERT INTO books VALUES(NULL,'$title','$isbn','$publisher','$original','$language','$imageData', '$genre')"; 
-                if(mysqli_query($link, $sql)){
-                    $_SESSION['addBook'] = true;
-                    header('Location: books.php');
-                }
-                else {
+            if(mysqli_num_rows($result_check)>0){
+                $row = mysqli_fetch_assoc($result_check);
+                $authorID = $row['ID'];
+                $sql1 = "INSERT INTO book_author VALUES(NULL, '$bookID', '$authorID')";
+                
+                if(!mysqli_query($link, $sql1)){
                     throw new Exception(mysqli_error($link));
                 }
             }
-            
-            mysqli_close($link);
+            elseif ($author=='') {
+                echo '<script>alert("author")</script>';
+                exit();
+            }
+
+            mysqli_free_result($result_check);
         }
+             
+        mysqli_close($link);
+    
     } catch (Exception $e){
         echo '<span style="color: red;">Error!!! Failed to connect. Try again later.</span>';
         echo '<br>Developer information: '.$e;
-    }*/
+    }
 }
 
 if(filter_has_var(INPUT_POST, 'addAuthor')){
-    
-    
+       
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $nationalityID = filter_input(INPUT_POST, 'nationalityID', FILTER_SANITIZE_NUMBER_INT);
-    $image = null;
+    $nationality = filter_input(INPUT_POST, 'nationality', FILTER_SANITIZE_STRING);
     $birth = filter_input(INPUT_POST, 'birth');
     if ($birth==''){
         $birth = 'NULL';
@@ -93,9 +220,22 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
             throw new Exception(mysqli_connect_errno());
         }
         
-        if($nationalityID==0){
-            $nationality = filter_input(INPUT_POST, 'nationality', FILTER_SANITIZE_STRING);
-            $sql1 = "INSERT INTO nationalities_languages VALUES(NULL, '$nationality')";
+        $sql_check = "SELECT * FROM nationalities WHERE nationalities.NATIONALITY LIKE '$nationality'";
+        $result_check = mysqli_query($link, $sql_check);
+        if(!$result_check){
+            throw new Exception(mysqli_error($link));
+        }
+         
+        if(mysqli_num_rows($result_check)>0){
+            $row = mysqli_fetch_assoc($result_check);
+            $nationalityID = $row['ID'];
+        }
+        elseif ($nationality=='') {
+            $nationalityID = 'NULL';
+        }
+        else{
+            $sql1 = "INSERT INTO nationalities VALUES(NULL, '$nationality')";
+            
             if(!mysqli_query($link, $sql1)){
                 throw new Exception(mysqli_error($link));
             }
@@ -103,9 +243,28 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
                 $nationalityID = mysqli_insert_id($link);
             }
         }
+        mysqli_free_result($result_check);
+
+        $validation = true;
+        if(file_exists($_FILES["image"]["tmp_name"])){
+            $imageData = mysqli_real_escape_string($link, file_get_contents($_FILES["image"]["tmp_name"]));
+            $imageType = mysqli_real_escape_string($link, $_FILES["image"]["type"]);    
+            if(substr($imageType, 0,5) != "image"){
+                $validation = false;
+            }
+        }
+        else{
+            $validation = false;
+        }
         
-        $sql2 = "INSERT INTO authors VALUES(NULL,'$name','$nationalityID', NULL, $birth)"; 
-        if(mysqli_query($link, $sql2)){
+        if(!$validation){
+            $sql = "INSERT INTO authors VALUES(NULL,'$name', '$nationalityID', LOAD_FILE('D:/A/XAMPP/xampp/htdocs/library/image/author.jpg'), '$birth')";
+        }
+        else {
+            $sql = "INSERT INTO authors VALUES(NULL,'$name', '$nationalityID', '$imageData', '$birth')";
+        }
+         
+        if(mysqli_query($link, $sql)){
             header('Location: addBook.php');
         }
         else {
@@ -136,12 +295,19 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
         <link rel="stylesheet" href="../style/modal_style.css" type="text/css">
         <link rel="stylesheet" href="../style/form_style.css" type="text/css">        
         <link rel="stylesheet" href="../style/ui_style.css" type="text/css">        
+        <link rel="stylesheet" href="../style/chosen_style.css" type="text/css">        
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <!-- <script> - JavaScript -->    
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="../js/auto.js"></script>
+        <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+        <script src="../js/input_autocomplete.js"></script>
+        <script src="../js/input_image.js"></script>
+        <script>
+            window.onload = function(){
+                $(".default").css("width", "200px");
+            }
+        </script>
     </head>
     <body>
         <nav class="sign">
@@ -194,8 +360,8 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
             </ol>
         </nav>
         
-        <form id="addBookForm" method="POST"></form>
-        <form id="addAuthorForm" method="POST"></form>
+        <form id="addBookForm" method="POST" enctype="multipart/form-data"></form>
+        <form id="addAuthorForm" method="POST" enctype="multipart/form-data"></form>
         
         <div id="container_main">
             <div class="row row_padding">
@@ -205,38 +371,37 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
                         <span class="tooltip w-150">Add the book</span>
                     </button>
                     <div class="column">
-                        <input form="addBookForm" type="image" src="../image/new_book.jpg" alt="add book" class="big border">
+                        <input form="addBookForm" name="image" id="book_file" capture type="file" accept="image/*">
+                        <img id="book_image" src="../image/new_book.jpg" alt="add book" class="big border pointer" />
                     </div>
                     <div class="column_main_list mb-0" style="margin-top: 0px; padding-top: 0px;">
                         <div class="row_header">
                             <header>
-                                <h2><input name="title" form="addBookForm" type="text" placeholder="Enter the book's title..." class="title" required></h2>
+                                <h2><input id="title_input" name="title" form="addBookForm" type="text" placeholder="Enter the book's title..." class="title" required></h2>
                             </header>
                         </div>
                         <div class="row mb-0">
                             <div class="column_half mb-0">
                                 <p class="lines_input">
-                                    <input id="authors_input" name="authors" form="addBookForm" style="width: 250px;" type="text" placeholder="Enter the book's authors..." required>
-                                    <input id="authorsID_auto" name="authorsID" form="addBookForm" type="hidden" value="0">
+                                    <select form="addBookForm" data-placeholder="Enter the book's authors..." multiple id="authors_input" name="authors[]">
+                                        <option value=""></option>
+                                        <?php include '../db/authors.php';?>
+                                    </select>
                                     <label class="icon">
                                         <a class="black" href="#addAuthorModal">
                                             <i class="material-icons">add</i>
                                             <span class="tooltip w-150">Add new author</span>
                                         </a>
-                                    </label><br>
-                                    <input id="series_input" name="series" form="addBookForm" type="text" placeholder="Enter the book's series...">
-                                    <input id="volume" style="margin-left: 15px; width: 40px;" min="1" type="hidden" placeholder="vol.">
-                                    <input id="seriesID_auto" name="seriesID" form="addBookForm" type="hidden" value="0"><br/>
-                                    <input id="genre_input" name="genre" form="addBookForm" type="text" placeholder="Enter the book's genre..." required>
-                                    <input id="genreID_auto" name="genreID" form="addBookForm" type="hidden" value="0"><br>
+                                    </label><br/>
+                                    <input id="series_input" name="series" form="addBookForm" style="margin-top: 0px" type="text" placeholder="Enter the book's series...">
+                                    <input id="volume" style=" margin-top: 0px; margin-left: 10px; width: 40px;" min="1" type="hidden" placeholder="vol."><br>
+                                    <input id="genre_input" name="genre" form="addBookForm" type="text" placeholder="Enter the book's genre..." required><br>
                                     <input id="original_input" name="original" form="addBookForm" type="text" placeholder="Enter the book's original title..."><br>
                                 </p>
                                 <p class="lines_input">
-                                    <input id="publisher_input" name="publisher" form="addBookForm" type="text" placeholder="Enter the book's publisher..." required>
-                                    <input id="publisherID_auto" name="publisherID" form="addBookForm" type="hidden" value="0"><br>
+                                    <input id="publisher_input" name="publisher" form="addBookForm" type="text" placeholder="Enter the book's publisher..." required><br>
                                     <input id="publication_input" name="publication" form="addBookForm" type="text" onfocus="(this.type='date')" placeholder="Enter the book's date of publication..." required><br>
-                                    <input name="language" form="addBookForm" id="language_input" type="text" placeholder="Enter the book's language..." required>
-                                    <input name="languageID" form="addBookForm" id="languageID_auto" type="hidden" value="0"><br>
+                                    <input name="language" form="addBookForm" id="language_input" type="text" placeholder="Enter the book's language..." required><br>
                                     <input id="pages_input" name="pages" form="addBookForm" type="number" placeholder="Enter the amount of book's pages..." required><br>
                                     <input id="isbn_input" name="isbn" form="addBookForm" type="text" placeholder="Enter the book's ISBN..." required><br>
                                     <input id="tags_input" name="tags" form="addBookForm" type="text" placeholder="Enter the book's tags..."><br>
@@ -271,9 +436,10 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
                     <div class="modal_container">
                         <div class="row">
                             <div class="column">
-                                <input form="addAuthorForm" type="image" src="../image/new_author.jpg" alt="add author image" class="small border">
+                                <input form="addAuthorForm" id="author_file" name="image" capture type="file" accept="image/*">
+                                <img id="author_image" src="../image/new_author.jpg" alt="add author image" class="small border pointer">
                             </div>
-                            <div class="column_main_list mb-0">
+                            <div class="column mb-0" style="margin-top: 15px;">
                                 <div class="row_header">
                                     <header>
                                         <h2><input name="name" form="addAuthorForm" type="text" placeholder="Enter the author's full name..." class="title" required></h2>
@@ -282,15 +448,14 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
                                 <div class="row mb-0">
                                     <div class="column_half mb-0">
                                         <p class="lines_input">
-                                            <input id="nationality_auto" name="nationality" form="addAuthorForm" type="text" placeholder="Enter the author's nationality..." required>
-                                            <input id="nationalityID_auto" name="nationalityID" form="addAuthorForm" type="hidden" value="0"> <br/>
-                                            <input name="birth" form="addAuthorForm" type="text" onfocus="(this.type='date')" placeholder="Enter the author's birth date..."><br>
+                                            <input id="nationality_input" style="margin-top: 0px" name="nationality" form="addAuthorForm" type="text" placeholder="Enter the author's nationality...">
+                                            <input id="birth_input" name="birth" form="addAuthorForm" type="text" onfocus="(this.type='date')" placeholder="Enter the author's birth date..."><br>
                                         </p>
                                     </div>
                                     <div class="column_half mb-0">
                                         <p class="lines">
-                                            <span class="black">Nationality:</span><br>
-                                            <span class="black">Birth date:</span><br/>
+                                            <span id="nationality_span"></span><span id="nationality_text"></span>
+                                            <span id="birth_span"></span><span id="birth_text"></span>
                                         </p>
                                     </div>
                                 </div>
@@ -309,3 +474,4 @@ if(filter_has_var(INPUT_POST, 'addAuthor')){
         
     </body>
 </html>
+

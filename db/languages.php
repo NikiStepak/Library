@@ -24,7 +24,7 @@ try {
             foreach ($result as $row) {
                 $r = array();
                 $r['id'] = $row['ID'];
-                $r['label'] = $row['NAME'];
+                $r['label'] = $row['LANGUAGE'];
                 $data[] = $r;            
             }
         }

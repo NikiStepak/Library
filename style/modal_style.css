@@ -19,7 +19,7 @@
 
 .modal-content {
     margin: auto;
-    width: 53%;
+    width: 50%;
     /* Add animation */
     -webkit-animation-name: example; /* Chrome, Safari, Opera */
     -webkit-animation-duration: 0.5s; /* Chrome, Safari, Opera */

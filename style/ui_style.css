@@ -3,7 +3,7 @@
 }
 
 ul.ui-menu{
-    background-color: #f2ddc8;
+    background-color: #ffffff;
     border: 2px solid #c13334;
     border-radius: 5px;
     border-top: none;
@@ -13,12 +13,17 @@ ul.ui-menu{
     width: 300px;
 }
 
+ul.ui-autocomplete{
+    width: 255px;
+}
+
 .ui-menu:hover{
     box-shadow: 0px 0px 10px 0px #000;
 }
 
-li:hover {
-    background: #e1ba8e;
+ul.ui-autocomplete li:hover {
+    background-color: #c13334;
+    color: #ffffff;
     cursor: default;
 }
 

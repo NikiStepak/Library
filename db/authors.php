@@ -49,7 +49,7 @@ try {
                 echo '<div class="row_list">';
                 echo '<label class="icon"><a><i class="material-icons">edit</i><span class="tooltip_top w-150">Edit the book</span></a></label>';
                 echo '<div class="column">';
-                echo '<a href="author.php?author_id='.$row['ID'].'"><img src="../db/image.php?id='.$row['ID'].'&table=authors" alt="book#'.$row['ID'].'" class="small"/></a>';
+                echo '<a href="author.php?author_id='.$row['ID'].'"><img src="../db/image.php?id='.$row['ID'].'&table=authors" alt="authors#'.$row['ID'].'" class="small"/></a>';
                 echo '</div><div class="column_margin-top"><header><h3><a href="author.php?author_id='.$row['ID'].'" class="black">'.$row['FULL_NAME'].'</a></h3></header>';
                 echo '<div class="column_margin-top">';
                 echo '<span class="black">Books:</span>'.$row['NUMBER'].'<br>';
@@ -85,6 +85,46 @@ try {
             echo '</div></div></div>';
         }
     
+        mysqli_free_result($result);
+    }
+    elseif(filter_has_var(INPUT_GET, 'term')){
+        $sql = "SELECT * FROM authors WHERE authors.FULL_NAME LIKE '%".filter_input(INPUT_GET, 'term')."%' "
+                . "ORDER BY authors.FULL_NAME LIMIT 3";       
+        
+        $result = mysqli_query($link, $sql);
+        if(!$result){
+            throw new Exception(mysqli_error($link));
+        }
+
+        $num_rows = mysqli_num_rows($result);
+        $data = array();
+        if($num_rows > 0){
+            foreach ($result as $row) {
+                $r = array();
+                $r['id'] = $row['ID'];
+                $r['label'] = $row['FULL_NAME'];
+                $data[] = $r;            
+            }
+        }
+        
+        echo json_encode($data);
+    
+        mysqli_free_result($result);
+    }
+    elseif (isset ($addBook)) {
+        $sql = "SELECT * FROM authors";
+        
+        $result = mysqli_query($link, $sql);
+        if(!$result){
+            throw new Exception(mysqli_error($link));
+        }
+        
+        $num_rows = mysqli_num_rows($result);
+        if($num_rows > 0){
+            foreach ($result as $row) {
+                echo '<option>'.$row['FULL_NAME'].'</option>';
+            }
+        }
         mysqli_free_result($result);
     }
     else {
